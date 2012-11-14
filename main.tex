@@ -1,0 +1,155 @@
+\documentclass[twoside,openright,a4paper,12pt]{report}
+\usepackage{afterpage}
+\usepackage{amsmath}
+\usepackage[norsk, english]{babel}
+\usepackage[font=sf,labelfont={sf,bf},margin=1cm]{caption}
+\usepackage{cite}
+\usepackage{color}
+\usepackage{courier}
+\usepackage{emptypage}
+\usepackage{epsfig, times}
+\usepackage{fancyhdr}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage[hidelinks]{hyperref}
+\usepackage[latin1]{inputenc}
+\usepackage{listings}
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{relsize}
+\usepackage{subcaption}
+%\usepackage{subfigure}
+\usepackage{textcomp}
+\usepackage{uiosloforside}
+\usepackage{verbatim}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+
+\definecolor{CodeKeywordColor}{HTML}{3465A4} % Blue  -> RGB(52,101,164)
+\definecolor{StringColor}{HTML}{A40000} % Red -> RGB(164,0,0)
+\definecolor{CommentColor}{HTML}{888a85} % Grey -> RGB(136,138,133)
+
+\lstset{
+   basicstyle=\footnotesize\ttfamily,
+   numbers=left,
+   numberstyle=\tiny,
+   %stepnumber=2,
+   numbersep=12pt,
+   tabsize=2,
+   extendedchars=true,
+   breaklines=true,
+   keywordstyle=\color{CodeKeywordColor}\bfseries,
+   frame=b,
+%   keywordstyle=[1]\textbf,
+%   keywordstyle=[2]\textbf,
+%   keywordstyle=[3]\textbf,
+%   keywordstyle=[4]\textbf,
+   stringstyle=\color{StringColor}\itshape,
+   showspaces=false,
+   showtabs=false,
+   xleftmargin=17pt,
+   framexleftmargin=17pt,
+   framexrightmargin=5pt,
+   framexbottommargin=4pt,
+   %backgroundcolor=\color{lightgray},
+   showstringspaces=false,
+   commentstyle=\color{CommentColor}\normalfont\itshape
+}
+ \lstdefinelanguage{OpenCL}[ANSI]{C}
+ {morekeywords={__kernel,kernel,__local,local,__global,global,%
+     __constant,constant,__private,private,%
+     char2,char3,char4,char8,char16,%
+     uchar2,uchar3,uchar4,uchar8,uchar16,%
+     short2,short3,short4,short8,short16,%
+     ushort2,ushort3,ushort4,ushort8,ushort16,%
+     int2,int3,int4,int8,int16,%
+     uint2,uint3,uint4,uint8,uint16,%
+     long2,long3,long4,long8,long16,%
+     ulong2,ulong3,ulong4,ulong8,ulong16,%
+     float2,float3,float4,float8,float16,%
+     image2d_t,image3d_t,sampler_t,event_t,%
+     bool2,bool3,bool4,bool8,bool16,%
+     half2,half3,half4,half8,half16,%
+     quad,quad2,quad3,quad4,quad8,quad16,%
+     complex,imaginary},%
+ }%
+\lstloadlanguages{C++,OpenCL}
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{\colorbox[cmyk]{0.43, 0.35, 0.35,0.01}{\parbox{\textwidth}{\hspace{15pt}#1#2#3}}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white, singlelinecheck=false, margin=0pt, font={bf,footnotesize}}
+
+
+% Define line spacing
+\linespread{1.2}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2ex plus 0.5ex minus 0.2ex}
+
+\pretolerance = 2000
+\tolerance = 5000   \hbadness = \tolerance
+
+\addtolength{\textheight}{70pt}
+\addtolength{\voffset}{-40pt}
+\setlength{\textwidth}{150mm}
+\setlength{\oddsidemargin}{-0mm}
+\setlength{\evensidemargin}{-0mm}
+\setlength{\footskip}{15mm}
+
+
+
+\pagestyle{myheadings}
+\markboth{Real-Time Depth Estimation}{Real-Time Depth Estimation}
+
+% \addtolength{\textheight}{80pt}
+% \addtolength{\voffset}{-40pt}
+% \setlength{\textwidth}{160mm}\setlength{\oddsidemargin}{-0mm}\setlength{\evensidemargin}{-0mm}
+
+\title{Depth Estimation on GPU with temporal optimization}
+\author{Christian Tryti}
+
+\date{} % Empty removes date
+
+\begin{document}
+
+\uiosloforside[kind=Master's Thesis]
+
+%\uiosloforside[kind=\large{\mbox{TITLE}}, author=\large{\mbox{YOUR NAME}}]
+
+\maketitle
+
+\clearpage
+\pagenumbering{roman}
+
+\begin{abstract}
+  Real-time dense depth estimation of HD images on commodity Graphic
+  Processing Units (GPU). Heavy optimizations of a well known block
+  matching algorithm is enough to achieve real time. Along with a
+  compute map technique, computation can be further reduced by up to
+  90\% for sequential frames in a video stream.
+\end{abstract}
+
+\tableofcontents{}
+\listoffigures{}
+\listoftables{}
+
+%%---------------------------------------------------------------------------%%
+
+\clearpage\pagenumbering{arabic}
+\include{intro}
+\include{design}
+\include{arch}
+\include{impl}
+\include{eval}
+
+\include{concl}
+
+\appendix
+\include{appA}
+
+
+%%---------------------------------------------------------------------------%%
+%% References
+
+
+\bibliographystyle{unsrt}
+\bibliography{all}
+\end{document}
