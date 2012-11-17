@@ -96,6 +96,8 @@ information.
     Virtualized Reality \cite{kanade-rander-narayanan}}
 \end{figure}
 
+
+
 \section{Problem Statement}\label{sect:prob-statement}
 
 There are plenty of algorithms for disparity calculations. They all
@@ -144,6 +146,7 @@ unappealing results for other applications, like image-based view
 synthesis.
 
 \subsubsection{Camera calibration and Stereo rectification}
+
 Input images must be stereo rectified. For a block matching algorithm
 to be as effective as possible, it has to be able to assume that
 corresponding points lie along the horizontal scan-line
@@ -191,19 +194,21 @@ To convert the disparity values to depth values, the intrinsic and
 extrinsic matrices from the cameras that took the input images must be
 provided. More specifically, the baseline (distance between the two
 cameras) and the lenses focal length is needed in a formula, as will
-be explained in chapter \ref{sec:depthestimation_theory}.
+be explained in chapter \ref{chap:depthestimation_theory}.
 
 \section{Outline}
 
-Chapter \ref{sect:design} presents the core ideas of stereo depth
-estimation in computer vision, and related work.
+Chapter \ref{chap:depthestimation_theory} presents the core ideas of
+stereo depth estimation in computer vision, and related work done in
+the field. The OpenCL framework is presented in chapter
+\ref{chap:arch}, along with some optimization strategies for GPU
+devices. Chapter \ref{chap:impl} presents the code that has been
+implemented. It starts off with the most basic depth estimator CPU
+implementation, followed by an as direct as possible port to OpenCL.
+From there, various optimizations are applied, followed finally by the
+refinement kernels.
 
-The OpenCL framework is presented in chapter \ref{sect:arch} along with
-some optimization strategies for GPU devices.
-
-In chapter \ref{sect:impl}, the implementation is presented. It starts
-off with the most basic depth estimator CPU implementation, followed
-by an as direct as possible port to OpenCL. From there, various
-optimizations are applied, followed finally by the refinement kernels.
-
-The last chapter, \ref{sect:eval}, evaluates the results
+Lastly, chapter \ref{chap:eval} evaluates the results. It shows the
+improvements most optimizations are able to bring, as well as the
+quality of the depth maps using the different methods presented in
+\ref{chap:depthestimation_theory}.
