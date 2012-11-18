@@ -34,7 +34,7 @@ proprietary GPGPU framework, which supports parallel programming on a
 GPU in C, closely followed by OpenCL in 2008.
 
 \begin{figure}
-  \includegraphics[width=\textwidth]{images/cpu-vs-gpu.pdf}
+  \includegraphics[width=0.8\textwidth]{images/cpu-vs-gpu.pdf}
   \caption{GPUs devote more transistors to data processing than CPUs}
   \label{fig:cpu-vs-gpu}
 \end{figure}
@@ -98,7 +98,8 @@ Computations on a device occur within the processing elements.''
 \cite{cl-spec}
 
 \begin{figure}
-  \includegraphics[width=\textwidth]{images/platform-model.png}
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/platform-model.png}
   \caption{Platform model, one host plus one or more compute devices,
     each with one or more compute units, each with one or more
     processing elements}
@@ -153,7 +154,8 @@ be identified multiple ways; by its global ID, by a combination of the
 work-group size and ID and the work-items local ID.
 
 \begin{figure}[h]
-  \includegraphics[width=\textwidth]{images/execution-model.png}
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/execution-model.png}
   \caption{An example of an NDRange index space showing work-items,
     their global IDs and their mapping onto the pair of work-group and
     local IDs}
@@ -203,7 +205,8 @@ memory to a cached region of the DRAM, local memory to the cache on
 each multiprocessor, and private memory to the cores registers.
 
 \begin{figure}[h]
-  \includegraphics[width=\textwidth]{images/memory-model.png}
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/memory-model.png}
   \caption{Conceptual OpenCL device architecture with processing
     elements (PE), compute units and devices. The host is not shown.}
   \label{execution-model-figure}
@@ -225,7 +228,6 @@ defines how many work-items are used, and how it is mapped to the
 data.
 
 
-
 \subsection{Kernels}
 
 An OpenCL kernel is a kind of function written in OpenCL-C that is
@@ -242,10 +244,13 @@ extensions include new vector data types like int4 and float4 etc, and
 There are many considerations that need to be taken into account when
 programming for efficiency on a GPU. Although OpenCL programs are
 portable, the same application might not be as effective on a CPU as
-it is on a GPU. This section will explain some of the strategies
-useful for the Nvidia GPU used in this thesis, with a focus on the
-ones implemented in chapter \ref{eval-chapter}. More information is
-available online at \cite{nvidia-best-practice}
+it is on a GPU. This section will explain some of the optimization
+strategies useful for the Nvidia GPU used in this thesis, with a focus
+on the ones implemented in chapter \ref{eval-chapter}. More
+information is available online from Nvidias Best Practice
+article\cite{nvidia-best-practice}.
+
+
 
 \begin{itemize}
 
@@ -265,9 +270,7 @@ available online at \cite{nvidia-best-practice}
 
 \end{itemize}
 
-These strategies applies to at least most GPUs released by Nvidia and
-AMD
-
+These strategies applies 
 
 \subsection{Memory Optimizations}
 
@@ -292,16 +295,16 @@ space.
     \hline
   \end{tabular}
   \label{table:memory-properties}
-  \caption{List of memory spaces and their features}
+  \caption{List of the Nvidia GeForce 460 GTX memory spaces on the and their properties}
 \end{table}
 
 The simplest implementations can use global memory exclusively. But,
 accessing global memory on a GPU is by far the slowest operation
-available, so reading and writing to it without a care works, but
+available, so reading and writing to it without a care will work, but
 impacts the performance. Smart use of all the memory spaces will
 increase performance significantly. Constant memory can be used for
 look-up tables and constant values, local memory for sharing data
-between work-items, texture memory to exploit the cache.
+between work-items, texture memory to exploit the cache, and so on. 
 
 \subsubsection{Global Memory Access Patterns}
 \label{sect:global-memory-optimization}
@@ -311,7 +314,7 @@ is done by half warps (16 threads), coalesced in as few as one
 transaction, in 32-, 64- or 128-byte segments. The exact number of
 threads and the segment sizes depends on the GPU and the data type,
 and newer GPUs with higher compute capability\ref{what-is-cc?} are
-more lenient on where each data segment begins, but the general
+more lenient on how each data segment is laid out, but the general
 principle is that few transactions can transfer a lot of data.
 
 \begin{figure}[h]
@@ -324,7 +327,8 @@ principle is that few transactions can transfer a lot of data.
 \end{figure}
 
 As seen in figure \ref{fig:execution-model-figure}, laying out the
-data correctly can increase the bandwidth on memory transfers greatly.
+data needed by the application correctly can increase the bandwidth on
+memory transfers greatly.
 
 \begin{lstlisting}[label={lst:coalesced_test}, caption=Copy kernel
   with offset argument]
@@ -354,8 +358,8 @@ devices; GeForce GTX 280 with compute capability 1.3 and GeForce GTX
 With offset that are multiples of 16, accesses can be done with 1
 transaction per half-warp for the highest bandwidth possible.
 Otherwise, 16 transactions per half-warp are issued, resulting in a
-performance degradation of about 10x, because 32 bytes are fetched per
-access, but only 4 bytes of those reads are kept.
+performance degradation of at least 8x, because 32 bytes are fetched
+per access, but only 4 bytes of those reads are kept.
 
 \subsubsection{Local memory}
 \label{sect:local-mem-optimization}
