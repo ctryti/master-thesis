@@ -6,7 +6,7 @@
 *.bak
 *.toc
 *.ps
-*.pdf
+main.pdf
 *.out
 *.glo
 *.lof
