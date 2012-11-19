@@ -84,9 +84,6 @@ This section contains a condensed summary of the OpenCL specification
 without going to in-depth, just to give a basic understanding of how
 it works.
 
-\vspace{5mm} \textbf{Device}:
-
-
 % \vspace{10mm}
 % \textbf{Platform model}:
 \subsubsection{Platform model}
@@ -122,8 +119,6 @@ Nvidia provides an OpenCL implementation for the CPU and the GPU
 respectively, and can both be used as OpenCL devices. The host for
 both platforms is the CPU device.
 
-% \vspace{10mm}
-% \textbf{Execution model}:
 \subsubsection{Execution model}
 
 ``Execution of an OpenCL program occurs in two parts: kernels that
@@ -163,8 +158,6 @@ work-group size and ID and the work-items local ID.
 \end{figure}
 
 
-% \vspace{10mm}
-% \textbf{Memory model}:
 \subsubsection{Memory model}
 
 
@@ -214,8 +207,6 @@ each multiprocessor, and private memory to the cores registers.
 
 
 
-% \vspace{10mm}
-% \textbf{Programming model}:
 \subsubsection{Programming model}
 
 ``Defines how the concurrency model is mapped to physical hardware.''
@@ -228,15 +219,53 @@ defines how many work-items are used, and how it is mapped to the
 data.
 
 
-\subsection{Kernels}
+\subsection{OpenCL Kernels}
 
 An OpenCL kernel is a kind of function written in OpenCL-C that is
 executed by an OpenCL capable device. OpenCL-C is based on C99, with
 some restrictions and added extensions. The most noticeable
 restrictions include no recursion and no function pointers. The
-extensions include new vector data types like int4 and float4 etc, and
-2D and 3D image types.
+included extensions are new vector data types like int4, float4 etc,
+2D and 3D image types, and some new built-in functions for math,
+efficient control-flow, and work-item synchronization and work-item
+identifiers.
 
+When writing concurrent programs for a CPU, the programmer needs to
+consider the physical resources available (CPU cores) and the overhead
+of creating and switching between threads. With OpenCL, the main goal
+is to express the problem in a data-parallel way. Often this means
+assigning a work-item for each iteration of a loop.
+
+For example; a serial single-CPU function for vector addition might
+look something like listing \ref{lst:c-vectoradd}. The function takes
+4 arguments; input vector A and B, and the output vector C, all with N
+elements. Each iteration in the for-loop adds the corresponding
+elements in A and B and stores the result in C.
+
+\begin{lstlisting}[label={lst:c-vectoradd},caption=Serial C vector
+    addition function]
+  void vectorAdd(int *A, int *B, int *C, int N) {
+    for(int i = 0; i < N; i++) 
+      C[i] = A[i] + B[i];
+  }
+\end{lstlisting}
+
+The OpenCL kernel listed in \ref{lst:opencl-vectoradd} achieves the
+same output. N instances of this function is generated (as work-items)
+and put in the execution queue of the contexts device, which executes
+them however the OpenCL runtime deems fit. The devices resources
+dictates how many of these kernels can execute in parallel.
+
+\begin{lstlisting}[label={lst:opencl-vectoradd}, caption=OpenCL kernel
+    for vector addition]
+
+  __kernel void vectorAdd(__global int *A, 
+                          __global int *B, 
+                          __global int *C) {
+    int tid = get_global_id(0);
+    C[tid] = A[tid] + B[tid];
+  }
+\end{lstlisting}
 
 
 \section{GPU Optimization Strategies}
@@ -249,7 +278,6 @@ strategies useful for the Nvidia GPU used in this thesis, with a focus
 on the ones implemented in chapter \ref{eval-chapter}. More
 information is available online from Nvidias Best Practice
 article\cite{nvidia-best-practice}.
-
 
 
 \begin{itemize}
@@ -313,9 +341,10 @@ global memory is accessed. Each store and load operation to the memory
 is done by half warps (16 threads), coalesced in as few as one
 transaction, in 32-, 64- or 128-byte segments. The exact number of
 threads and the segment sizes depends on the GPU and the data type,
-and newer GPUs with higher compute capability\ref{what-is-cc?} are
-more lenient on how each data segment is laid out, but the general
-principle is that few transactions can transfer a lot of data.
+and newer GPUs with higher compute capability are more lenient on how
+each data segment is laid out, but the general principle is that few
+transactions can transfer a lot of data.
+
 
 \begin{figure}[h]
   \includegraphics[width=\textwidth]{images/coalesced-access.pdf}
@@ -366,12 +395,26 @@ per access, but only 4 bytes of those reads are kept.
 
 The OpenCL Local memory space is mapped to the GPUs on-chip shared
 memory, which provides very low latency and very high throughput
-compared to the global memory. There is however a very limited size,
-and very rigid rules to follow in order to achieve the maximum
-performance.
+compared to the global memory. The memory is also visible for all
+work-items in the same work-group, which lets them share data. This is
+especially important for kernels where multiple work-items might need
+the same data. A typical strategy for these kernels is to begin with
+all threads cooperating in reading a section of data from global
+memory into the work-groups local memory, resulting in a single global
+read per value needed. 
 
-The memory is divided into memory banks of equal size that can be
-accessed simultaneously by threads in the same work-group.
+
+Local memory is very limited in size, and rigid rules needs to be
+follow in order to achieve the maximum performance. The memory is
+divided into memory banks of equal size that can be accessed
+simultaneously by threads in warps. If multiple threads of a warp need
+access to the same memory bank, a bank-conflict happens, and the
+request is serialized. However, if all threads of the warp accesses
+the same memory bank, there is no bank-conflict. Understanding the
+layout of these banks, and laying out data in the correctly can
+improve the performance. The exact values and speed of the memory
+varies with the compute capability of the GPU, but the principals are
+the same for them all.
 
 \subsection{NDRange optimizations}
 \label{sect:ndrange-optimization}
