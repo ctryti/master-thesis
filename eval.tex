@@ -1,34 +1,33 @@
+%!TEX root = main.tex
 \chapter{Evaluation}
 \label{chap:eval}
 
-Performance measurements are done in two parts; the total run time of
-the pipeline, and the output quality.
+Performance measurements are done in two parts; the total run time of the
+pipeline, and the output quality.
 
-Run time is measured from the first input upload onto the device,
-until the output is completely downloaded onto the host. Disparity map
-quality is measured with Middlebury's excellent online disparity map
-evaluator[TODO: reference Middlebury online evaluator].
+Run time is measured from the first input upload onto the device, until the
+output is completely downloaded onto the host. Disparity map quality is
+measured with Middlebury's excellent online disparity map evaluator[TODO:
+reference Middlebury online evaluator].
 
 The quality and run-time for the compute-map optimization is harder to
-evaluate. The optimization only performs well on subsequent video
-frames, and adds a small computation penalty to the start of each
-frame. So testing it on a single set of images will not show the
-performance benefits. A stereo rectified video sequence accompanied by
-ground truth for each frame is needed, but well rectified and
-relatively noise free video datasets don't yet exist.
+evaluate. The optimization only performs well on subsequent video frames, and
+adds a small computation penalty to the start of each frame. So testing it on
+a single set of images will not show the performance benefits. A stereo
+rectified video sequence accompanied by ground truth for each frame is needed,
+but well rectified and relatively noise free video datasets don't yet exist.
 
 Table \ref{algorithm-name-table} shows the name and properties of the
 algorithms used when evaluating the run-time performance. Subsequent
-algorithms include the previous algorithms properties, except for the
-two DUAL algorithms, which were made with and without loop unrolling,
-to demonstrate the huge difference it can make.
+algorithms include the previous algorithms properties, except for the two DUAL
+algorithms, which were made with and without loop unrolling, to demonstrate
+the huge difference it can make.
 
-For quality, the BM algorithms are dropped, since they produce close
-to identical results as DUAL, being essentially the same algorithm.
-Some difference is found in erroneous areas, such as the input borders
-(left side for the left inputs, right side for the right inputs) and
-occlusion zones, due to some difference in the handling of the
-aggregation window boundaries.
+For quality, the BM algorithms are dropped, since they produce close to
+identical results as DUAL, being essentially the same algorithm. Some
+difference is found in erroneous areas, such as the input borders (left side
+for the left inputs, right side for the right inputs) and occlusion zones, due
+to some difference in the handling of the aggregation window boundaries.
 
 \begin{table}
   \begin{tabular}{|l|l|}
@@ -54,11 +53,9 @@ aggregation window boundaries.
 
 \subsection{Run time}
 
-Figure [TODO: ref figure] shows a graph of the running times for the
-different versions of the algorithm, with increasing maximum disparity
-$\mathcal{D}$, along the X-axis.
-
-
+Figure [TODO: ref figure] shows a graph of the running times for the different
+versions of the algorithm, with increasing maximum disparity $\mathcal{D}$,
+along the X-axis.
 
 \begin{figure}
   \centering
@@ -66,7 +63,6 @@ $\mathcal{D}$, along the X-axis.
   \caption{Running time for each algorithm}
   \label{runtime-9}
 \end{figure}
-
 
 \subsection{Disparity map quality}
 
@@ -80,33 +76,30 @@ $\mathcal{D}$, along the X-axis.
 \end{figure}
 
 
-Figure \ref{quality-barchar} shows how the quality is affected by
-increasing aggregation window size, $\omega$ $\times$ $\omega$. Each
-of the four graphs are measurements on the four middlebury evaluation
-datasets. In each graph, groups of 3 $\times$ 8 bars represent the
-error percentages for non-occluded, all and discontinuity areas, with
-increasing $\omega$ from 7 to 21. The algorithms used are labeled
-beneath.
+Figure \ref{quality-barchar} shows how the quality is affected by increasing
+aggregation window size, $\omega$ $\times$ $\omega$. Each of the four graphs
+are measurements on the four middlebury evaluation datasets. In each graph,
+groups of 3 $\times$ 8 bars represent the error percentages for non-occluded,
+all and discontinuity areas, with increasing $\omega$ from 7 to 21. The
+algorithms used are labeled beneath.
 
 The notable features on the graph is the opposite trends of errors in
-textureless areas and occlusions. In all instances, the increase of
-$\omega$ results in a close to linear increase in errors in
-occluded areas, while non-occluded areas are relatively constant, with
-a few exceptions where the error rates decrease slightly.
+textureless areas and occlusions. In all instances, the increase of $\omega$
+results in a close to linear increase in errors in occluded areas, while non-
+occluded areas are relatively constant, with a few exceptions where the error
+rates decrease slightly.
 
-Another noteworthy feature is that the algorithms using cross-checking
-[TODO: ref cross-checking section] receives a higher error percentage
-for occluded areas than the same algorithms without cross-checking.
-This is because the evaluator also counts a disparity value of 0 as an
-error, even in occluded areas. Non of the implemented algorithms
-attempt to extrapolate disparities for occlusions, and therefor suffer
-a higher error rate.
+Another noteworthy feature is that the algorithms using cross-checking [TODO:
+ref cross-checking section] receives a higher error percentage for occluded
+areas than the same algorithms without cross-checking. This is because the
+evaluator also counts a disparity value of 0 as an error, even in occluded
+areas. Non of the implemented algorithms attempt to extrapolate disparities
+for occlusions, and therefor suffer a higher error rate.
 
-The algorithms not using cross-checking ends up with some disparity
-value anywhere between 0 and max-disparity, which can be within the
-threshold of what the evaluator considers an error. This can make the
-cross-checking algorithms appear worse than its non-cross-checking
-counterpart.
+The algorithms not using cross-checking ends up with some disparity value
+anywhere between 0 and max-disparity, which can be within the threshold of
+what the evaluator considers an error. This can make the cross-checking
+algorithms appear worse than its non-cross-checking counterpart.
 
 \begin{figure}
   \centering
@@ -115,19 +108,16 @@ counterpart.
   \label{average-error-rates-final}
 \end{figure}
 
-The overall best quality is found by averaging error rates over all
-four datasets, as shown in figure\ref{average-error-rates-final}. As
-with most local algorithms, averaging the error rates is a trade-off
-between the type of errors one considers most important.
-
-
+The overall best quality is found by averaging error rates over all four
+datasets, as shown in figure\ref{average-error-rates-final}. As with most
+local algorithms, averaging the error rates is a trade-off between the type of
+errors one considers most important.
 
 \begin{figure}
 
   \setcounter{subfigure}{0}
   \label{fig:grid-of-outputs-tsukuba}
   \centering
-
 
   \begin{subfigure}[b]{0.45\textwidth}
     \centering
@@ -140,9 +130,6 @@ between the type of errors one considers most important.
     \includegraphics[width=\textwidth]{images/stereo-pairs/tsukuba_groundtruth.png}
     \caption{Ground truth}
   \end{subfigure}
-
-  %
-  %
 
   \begin{subfigure}[b]{0.23\textwidth}
     \centering
@@ -168,9 +155,6 @@ between the type of errors one considers most important.
     \caption{BM 21}
   \end{subfigure}
 
-  %
-  %
-
   \begin{subfigure}[b]{0.23\textwidth}
     \centering
     \includegraphics[width=\textwidth]{images/stereo-pairs/tsukuba_bt_9.png}
@@ -194,9 +178,6 @@ between the type of errors one considers most important.
     \includegraphics[width=\textwidth]{images/stereo-pairs/tsukuba_bt_21.png}
     \caption{BT 21}
   \end{subfigure}
-
-  %
-  %
 
   \begin{subfigure}[b]{0.23\textwidth}
     \centering
@@ -222,9 +203,6 @@ between the type of errors one considers most important.
     \caption{CC 21}
   \end{subfigure}
 
-  %
-  %
-
   \begin{subfigure}[b]{0.23\textwidth}
     \centering
     \includegraphics[width=\textwidth]{images/stereo-pairs/tsukuba_pyramid_9.png}
@@ -248,9 +226,6 @@ between the type of errors one considers most important.
     \includegraphics[width=\textwidth]{images/stereo-pairs/tsukuba_pyramid_21.png}
     \caption{PY 21}
   \end{subfigure}
-
-  %
-  %
 
   \begin{subfigure}[b]{0.23\textwidth}
     \centering
@@ -280,14 +255,10 @@ between the type of errors one considers most important.
 
 \end{figure}
 
-
-
 \begin{figure}
   \setcounter{subfigure}{0}
   \label{fig:grid-of-outputs-venus}
   \centering
-
-
 
   \begin{subfigure}[b]{0.3\textwidth}
     \centering
@@ -300,9 +271,6 @@ between the type of errors one considers most important.
     \includegraphics[width=\textwidth]{images/stereo-pairs/venus_groundtruth.png}
     \caption{Ground truth}
   \end{subfigure}
-
-  %
-  %
 
   \begin{subfigure}[b]{0.23\textwidth}
     \centering
@@ -328,9 +296,6 @@ between the type of errors one considers most important.
     \caption{BM 21}
   \end{subfigure}
 
-  %
-  %
-
   \begin{subfigure}[b]{0.23\textwidth}
     \centering
     \includegraphics[width=\textwidth]{images/stereo-pairs/venus_bt_9.png}
@@ -354,9 +319,6 @@ between the type of errors one considers most important.
     \includegraphics[width=\textwidth]{images/stereo-pairs/venus_bt_21.png}
     \caption{BT 21}
   \end{subfigure}
-
-  %
-  %
 
   \begin{subfigure}[b]{0.23\textwidth}
     \centering
@@ -382,9 +344,6 @@ between the type of errors one considers most important.
     \caption{CC 21}
   \end{subfigure}
 
-  %
-  %
-
   \begin{subfigure}[b]{0.23\textwidth}
     \centering
     \includegraphics[width=\textwidth]{images/stereo-pairs/venus_pyramid_9.png}
@@ -408,9 +367,6 @@ between the type of errors one considers most important.
     \includegraphics[width=\textwidth]{images/stereo-pairs/venus_pyramid_21.png}
     \caption{PY 21}
   \end{subfigure}
-
-  %
-  %
 
   \begin{subfigure}[b]{0.23\textwidth}
     \centering
@@ -446,7 +402,6 @@ between the type of errors one considers most important.
   \label{fig:grid-of-outputs-teddy}
   \centering
 
-
   \begin{subfigure}[b]{0.45\textwidth}
     \centering
     \includegraphics[width=\textwidth]{images/stereo-pairs/teddy_imL.png}
@@ -458,9 +413,6 @@ between the type of errors one considers most important.
     \includegraphics[width=\textwidth]{images/stereo-pairs/teddy_groundtruth.png}
     \caption{Ground truth}
   \end{subfigure}
-
-  %
-  %
 
   \begin{subfigure}[b]{0.23\textwidth}
     \centering
@@ -486,9 +438,6 @@ between the type of errors one considers most important.
     \caption{BM 21}
   \end{subfigure}
 
-
-
-
   \begin{subfigure}[b]{0.23\textwidth}
     \centering
     \includegraphics[width=\textwidth]{images/stereo-pairs/teddy_bt_9.png}
@@ -512,9 +461,6 @@ between the type of errors one considers most important.
     \includegraphics[width=\textwidth]{images/stereo-pairs/teddy_bt_21.png}
     \caption{BT 21}
   \end{subfigure}
-
-
-
 
   \begin{subfigure}[b]{0.23\textwidth}
     \centering
@@ -540,9 +486,6 @@ between the type of errors one considers most important.
     \caption{CC 21}
   \end{subfigure}
 
-
-
-
   \begin{subfigure}[b]{0.23\textwidth}
     \centering
     \includegraphics[width=\textwidth]{images/stereo-pairs/teddy_pyramid_9.png}
@@ -566,9 +509,6 @@ between the type of errors one considers most important.
     \includegraphics[width=\textwidth]{images/stereo-pairs/teddy_pyramid_21.png}
     \caption{PY 21}
   \end{subfigure}
-
-
-
 
   \begin{subfigure}[b]{0.23\textwidth}
     \centering
@@ -605,7 +545,6 @@ between the type of errors one considers most important.
   \label{fig:grid-of-outputs-cones}
   \centering
 
-
   \begin{subfigure}[b]{0.45\textwidth}
     \centering
     \includegraphics[width=\textwidth]{images/stereo-pairs/cones_imL.png}
@@ -617,9 +556,6 @@ between the type of errors one considers most important.
     \includegraphics[width=\textwidth]{images/stereo-pairs/cones_groundtruth.png}
     \caption{Ground truth}
   \end{subfigure}
-
-  %
-  %
 
   \begin{subfigure}[b]{0.23\textwidth}
     \centering
@@ -645,9 +581,6 @@ between the type of errors one considers most important.
     \caption{BM 21}
   \end{subfigure}
 
-  %
-  %
-
   \begin{subfigure}[b]{0.23\textwidth}
     \centering
     \includegraphics[width=\textwidth]{images/stereo-pairs/cones_bt_9.png}
@@ -671,9 +604,6 @@ between the type of errors one considers most important.
     \includegraphics[width=\textwidth]{images/stereo-pairs/cones_bt_21.png}
     \caption{BT 21}
   \end{subfigure}
-
-  %
-  %
 
   \begin{subfigure}[b]{0.23\textwidth}
     \centering
@@ -699,9 +629,6 @@ between the type of errors one considers most important.
     \caption{CC 21}
   \end{subfigure}
 
-  %
-  %
-
   \begin{subfigure}[b]{0.23\textwidth}
     \centering
     \includegraphics[width=\textwidth]{images/stereo-pairs/cones_pyramid_9.png}
@@ -725,9 +652,6 @@ between the type of errors one considers most important.
     \includegraphics[width=\textwidth]{images/stereo-pairs/cones_pyramid_21.png}
     \caption{PY 21}
   \end{subfigure}
-
-  %
-  %
 
   \begin{subfigure}[b]{0.23\textwidth}
     \centering
@@ -767,7 +691,7 @@ between the type of errors one considers most important.
         80 & 329.52    & 132.39 & 404.38      & 199.02  & 29.55   & 42.25          \\
         90 & 376.42    & 151.40 & 466.80      & 383.05  & 35.47   & 55.27          \\
         100 & 423.41    & 170.64 & 575.43      & 503.63  & 39.40   & 61.07          \\
-       110 & 470.31    & 190.44 & 639.04      & 559.31  & 40.48   & 61.24          \\
+        110 & 470.31    & 190.44 & 639.04      & 559.31  & 40.48   & 61.24          \\
         120 & 517.05    & 210.34 & 645.30      & 533.80  & 37.00   & 57.42          \\
         130 & 563.85    & 230.64 & 699.17      & 573.71  & 35.74   & 55.89          \\
         140 & 610.49    & 251.62 & 748.59      & 368.40  & 30.46   & 44.37          \\

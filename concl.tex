@@ -1,19 +1,19 @@
+%!TEX root = main.tex
 \chapter{Conclusion}\label{chap:concl}
 
-Block matching is currently one of the fastest dense depth map
-algorithms [TODO: source?]. Though the quality is far from the best,
-it is probably usable in some applications. With GPUs and CPUs getting
-better and cheaper, the OpenCL and CUDA frameworks maturing, a regular
-home computer has the computing power of a small super-computer, depth
-estimation
+Block matching is currently one of the fastest dense depth map algorithms
+[TODO: source?]. Though the quality is far from the best, it is probably
+usable in some applications. With GPUs and CPUs getting better and cheaper,
+the OpenCL and CUDA frameworks maturing, a regular home computer has the
+computing power of a small super-computer, depth estimation
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Summary}
 
-In this section, you typically write about wyat you have done to
-address the problem statement in section~\ref{sect:prob-statement}.
+In this section, you typically write about wyat you have done to address the
+problem statement in section~\ref{sect:prob-statement}.
 
 
 
@@ -22,12 +22,12 @@ address the problem statement in section~\ref{sect:prob-statement}.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Future work}
 
-Paired with a silhouette extractor, the speed and quality can be
-further improved. Silhouettes can be used to identify object borders
-and depth discontinuities so they can be treated differently, with a
-smaller aggregation window for example, or a different cost matching
-method, and also mask out a region of interest, allowing the depth
-estimator to ignore background, if it is of no interest.
+Paired with a silhouette extractor, the speed and quality can be further
+improved. Silhouettes can be used to identify object borders and depth
+discontinuities so they can be treated differently, with a smaller aggregation
+window for example, or a different cost matching method, and also mask out a
+region of interest, allowing the depth estimator to ignore background, if it
+is of no interest.
 
-A better understanding of signal processing and image sampling is
-needed to improve on the Pyramid algorithm and Compute mask steps.
+A better understanding of signal processing and image sampling is needed to
+improve on the Pyramid algorithm and Compute mask steps.
