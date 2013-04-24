@@ -18,7 +18,8 @@ a large role in computer vision.
 
 This chapter will briefly explain how a camera works, camera intrinsic and
 extrinsic matrices, and how the images must be prepared before continuing down
-the depth estimation pipeline.
+the depth estimation pipeline. For more exhaustive information on these
+topics, refer to \emph{O'reilly Learning OpenCV}\ref{open-cv}.
 
 \section{Pinhole Camera Model}
 
@@ -48,7 +49,7 @@ scene.
 
 \begin{figure}[h]
   \centering
-  \label{fig:pinhole-camera-model}
+  \label{fig:rearranged-pinhole-camera-model}
   \includegraphics[width=\textwidth]{images/rearranged-Pinhole-camera-model.pdf}
   \caption{A diagram of a pinhole camera showing the important features of the model}
 \end{figure}
@@ -61,6 +62,8 @@ projection, the point which all rays travel towards. The image created by rays
 intersecting the image plane is equivalent to the image created in the
 previous model, but it is no longer upside down. The similar triangles
 relationship $x = f\frac{X}{Z}$ is now more evident.
+
+
 
 
 It is a simple model, so it does not take into account geometric distortions
