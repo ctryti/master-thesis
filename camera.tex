@@ -1,11 +1,12 @@
 %!TEX root = main.tex
 \chapter{Camera Models and Calibration}
 
-Computer vision works much like the same way human vision works. Light rays
-emitted from a light source, such as a lamp or the sun, travels until it hits
-an object. Depending on the objects physical properties (light absorption,
-reflection and emission spectra), the light re-emitted by that object that
-eventually reaches our eyes determines which color we perceive the object has.
+Computer vision works much like the way human vision works. Light rays emitted
+from a light source, such as a lamp or the sun, travels until it hits an
+object. Depending on the objects physical properties (light absorption,
+reflection and emission spectra). The light re-emitted by that object and
+which eventually reaches our eyes, determines which color we perceive the
+object has.
 
 A camera is very similar to our eyes; in place of the eyes cornea and lens,
 iris and retina, a camera has glass lenses, aperture and imager respectively.
@@ -39,13 +40,13 @@ example of pinhole a camera is shown in figure \ref{fig:pinhole-camera-model}.
 The \emph{principle point} is the pinhole itself, the point which all the rays
 projected into the \emph{image plane} intersect. The \emph{optical axis} is
 the axis perpendicular to the image plane that intersects the principle point,
-and the \emph{center of projection} is where the optical axis intersects the
-image plane. \emph{X} (capital X) is the distance between a point \emph{P} in
-the 3D scene and the optical axis, and \emph{x} is the distance between
-projected point \emph{p} and the center of projection. \emph{f} is the focal
-length, the distance between the principle point and the center of projection,
-and \emph{Z} is the distance from the principle point to the point P in the 3D
-scene.
+and the \emph{center of projection} (also referred to as the optical center)
+is where the optical axis intersects the image plane. \emph{X} (capital X) is
+the distance between a point \emph{P} in the 3D scene and the optical axis,
+and \emph{x} is the distance between projected point \emph{p} and the center
+of projection. \emph{f} is the focal length, the distance between the
+principle point and the center of projection, and \emph{Z} is the distance
+from the principle point to the point P in the 3D scene.
 
 \begin{figure}[h]
   \centering
@@ -64,21 +65,32 @@ previous model, but it is no longer upside down. The similar triangles
 relationship $x = f\frac{X}{Z}$ is now more evident.
 
 
-
-
-It is a simple model, so it does not take into account geometric distortions
-or blurring of unfocused points.
-
-Distortions:
-    lens barrel
-    color
-    brightness
-
-
-
 \section{Calibration}
+
+So far, the model is a bit too simplistic to model a real camera. Most of the
+properties are very hard to manufacture to perfectly mimic the pinhole model;
+getting the optical axis exactly perpendicular to the image plane requires
+much more precise than are used for most cameras \ref{fig:imager-glued},
+placing the image plane so that the optical center is exactly on the optical
+axis, and creating lenses that behave like the pinhole (letting through
+exactly one ray from each point in the scene) is impossible. Additionally,
+lenses distort the scene projected onto the image plane by bending the light
+rays, at different rates depending on where the ray hits the lens.
+
+To deal with these problems, two informational models are used; a model for
+the camera's geometry and a distortion model for the lens. These two models
+define the intrinsic parameters of the camera. These intrinsic parameters vary
+from camera to camera, even identical camera models, because the manufacturing
+process often isn't precise enough.
+
+The camera geometry model defines values for the optical center offsets and
+and focal length in both x- and y-axis. The reason the focal length is
+defined for the x- and y-axis' is that some imagers use rectangular pixels.
+
+The process of obtaining the correct values for the intrinsics for a camera is
+called \emph{calibration}.
 
 \subsection{Basic Projective Geometry}
 
-\section{Lens Distortion}
+\subsection{Lens Distortion}
 
