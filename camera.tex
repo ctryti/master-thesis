@@ -67,15 +67,16 @@ relationship $x = f\frac{X}{Z}$ is now more evident.
 
 \section{Calibration}
 
-So far, the model is a bit too simplistic to model a real camera. Most of the
-properties are very hard to manufacture to perfectly mimic the pinhole model;
-getting the optical axis exactly perpendicular to the image plane requires
-much more precise than are used for most cameras \ref{fig:imager-glued},
-placing the image plane so that the optical center is exactly on the optical
-axis, and creating lenses that behave like the pinhole (letting through
-exactly one ray from each point in the scene) is impossible. Additionally,
-lenses distort the scene projected onto the image plane by bending the light
-rays, at different rates depending on where the ray hits the lens.
+So far, the model is a bit too simplistic to represent a real camera. Most of
+the properties are very hard to manufacture to perfectly mimic the pinhole
+model; getting the optical axis exactly perpendicular to the image plane
+requires much more precise processes than are used for most cameras
+\ref{fig:imager- glued}, placing the image plane so that the optical center is
+exactly on the optical axis, and creating lenses that behave like the pinhole
+(letting through exactly one ray from each point in the scene) is impossible.
+Additionally, lenses distort the scene projected onto the image plane by
+bending the light rays, at different rates depending on where the ray hits the
+lens.
 
 To deal with these problems, two informational models are used; a model for
 the camera's geometry and a distortion model for the lens. These two models
@@ -83,9 +84,18 @@ define the intrinsic parameters of the camera. These intrinsic parameters vary
 from camera to camera, even identical camera models, because the manufacturing
 process often isn't precise enough.
 
-The camera geometry model defines values for the optical center offsets and
-and focal length in both x- and y-axis. The reason the focal length is
-defined for the x- and y-axis' is that some imagers use rectangular pixels.
+The camera geometry model defines values for the optical center offsets $c_x$
+$c_y$, and and focal lengths $f_x$ $f_y$. The reason the focal length
+is defined for both axis' is that some imagers use rectangular pixels.
+
+These values are popularly represented as a $3\times3$ matrix
+$$
+\begin{bmatrix}
+    f_x & 0   & c_x \\
+    0   & f_y & c_y \\
+    0   & 0   & 1
+\end{bmatrix}
+$$
 
 The process of obtaining the correct values for the intrinsics for a camera is
 called \emph{calibration}.
